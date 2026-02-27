@@ -1,118 +1,81 @@
-/**
- * REVIEW CONTENT CONFIGURATION
- * Easily add or edit reviews here.
- * Format: { id, name, category, rating, image, text }
- */
-const REVIEWS_DATA = [
+// CONFIGURATION
+const clinicPhone = "+13105550123";
+const clinicWhatsapp = "13105550123";
+
+// REVIEW DATA - CENTRALIZED FOR EASY EDITING
+const reviewsData = [
     {
         id: 1,
         name: "Sarah Jenkins",
-        category: "Root Canal Patient",
+        treatment: "Root Canal Patient",
         rating: 5,
-        image: "assets/patient-1.jpg",
-        text: "The most gentle dental experience I've ever had. Dr. Smith explained everything clearly and made me feel completely at ease."
+        text: "The most gentle dental experience I've ever had. Dr. Mitchell explained everything clearly and made me feel completely at ease.",
+        image: "assets/patient1.jpg", 
+        fallback: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop"
     },
     {
         id: 2,
         name: "Michael Chen",
-        category: "Regular Checkup",
+        treatment: "Regular Checkup",
         rating: 5,
-        image: "assets/patient-2.jpg",
-        text: "Absolutely professional. The clinic is spotless and the staff are incredibly welcoming. Highly recommend for anxiety-free dentistry."
+        text: "Absolutely professional. The clinic is spotless and the staff are incredibly welcoming. Highly recommend for anxiety-free dentistry.",
+        image: "assets/patient2.jpg",
+        fallback: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop"
     },
     {
         id: 3,
         name: "Emma Wilson",
-        category: "Whitening & Veneers",
-        rating: 4.5,
-        image: "assets/patient-3.jpg",
-        text: "I finally have my confidence back thanks to the amazing cosmetic work done here. The results exceeded my expectations!"
+        treatment: "Whitening & Veneers",
+        rating: 5,
+        text: "I finally have my confidence back thanks to the amazing cosmetic work done here. The results exceeded my expectations!",
+        image: "assets/patient3.jpg",
+        fallback: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop"
     }
 ];
 
-/**
- * IMAGE FALLBACK CONFIGURATION
- * Maps local asset paths to CDN placeholders in case local files are missing.
- */
-const IMAGE_PLACEHOLDERS = {
-    'assets/hero-banner.jpg': 'https://lh3.googleusercontent.com/aida-public/AB6AXuAggimeFWXh_wIIowjeJg-hED3jvKyVdDG3wPBIeUimQAsKDeTjc4tkwV9F29IdDU2ydhyv-6WzTSsX2ygyPiHC2t29Fjv0CPgnRAnK5YUFmw1963Ten4HYC_hKGYS9_HjxXkXJOE0LpBv2lknTg5rnHBpqKDrHsfBbPpgYcYJS7Dj20qfzBAVmb6R0mBm6jdZEqofKE0hfv1LxuJeoqpdHr4zJyKSF8fVRlg60Dz86QO1eD83dL7FkqcjT-BPm3L5VzqEuGI7Jxtw',
-    'assets/dr-smith.jpg': 'https://lh3.googleusercontent.com/aida-public/AB6AXuB9w-AJjcuksXSaQzm7-ItljGgm02LT8BCGHy4rtADO0lVhbTzYeJOMD-j3zK0m84174j4A6aH35A3FsOnXwQIKHI7pdORf-p2q4cbHla2NyeFxJhHXifvnINdopdF6NoWcjRb-ZAF5lyygJJx178R7rMmN_Qh2XaiXt1FysEcD3zlg49jvsDUTSMD2XuLU4Gh9rQBjDIb5sAwn82zj_FJ1wDq-cEYB5pHswczFDI83VfKRsTxIisRW3WEtYS2nwMn7fZGGEZQPShA',
-    'assets/gallery-1.jpg': 'https://lh3.googleusercontent.com/aida-public/AB6AXuAH9Avni_IhW-rPSfMNbwJB2QP_STQShM7f_jsaa9GnwiDrIZQwiZGz6S_ls2sbGxLkcaCGcD_5yAr62h6g8jjPJT7Hncp1l8miQ1rnVGNeH-dXvPCskGUFIxlPtPNzpXMUlfv89Twp1KmYq1LAx32xJv5qC6cjPdH94505IYzo9lMX6tEodK0U9mJu7qm7Akd6Pd5ff_CYPRI70IJbdb6vRquXAxhlWiQP2LKlU0mbOiRW4OVT4RDRxOcGO_f_ZB_b5GN7jIMF3AQ',
-    'assets/gallery-2.jpg': 'https://lh3.googleusercontent.com/aida-public/AB6AXuDD9PyhZla8h8eSRRl5Km8A00BS1Kl0KCkrl7rkMmSXqxyzU3OxvmZc-MRkJHKzE6au-BY73mI06bE6_OSTL57LojZ28JzHBbShEXeX8adJ9VMuURKTqEwN815wBhoz0XqP8rzHPZGD6CH5KZBTDVps-7wxxtTe_WGbTayLV-Xg9LunjsqHCPfAfoPyGcqQW3i1CDuCZBa76hH6VIyCZroUc-H9IBjvHMjFbAzcqDScBYXXclWi63WIx4CO6DL4P0qdT0P20Zm0ccU',
-    'assets/gallery-3.jpg': 'https://lh3.googleusercontent.com/aida-public/AB6AXuCFPzMffTX5FZkqndsxdAMF1n0e4IiFqtIasB4rWfLxPZvUdZEnOjDkRYxmoA9ZNiR5nvxPTsXXUtIxNaO_W_vNjOZ2-fJRZ_wYd7FOKQdvAjNhiUoW7zfTTlhRANlawfq8jd88o391Pngw4JbOjPncnRZ65Xi1WSYv1TC8BOJD8HHbiMdP9pilUmHHhhkq_Xw1kmbuLDUCRWwbTT1k5sn51zUuC-G3YAwpTrNcfT-V1yp8URaDbb46l5qfgIPXZGAFH4EsugRfcv8',
-    'assets/patient-1.jpg': 'https://lh3.googleusercontent.com/aida-public/AB6AXuAoEIP3gKBXiAFm5WBurjiASvP1sscF-mn1y67HQ8M3SXlREu73Mo6EdfgnbCdNSkhgGuWK3BZfSXcxV4cYvz4v6adwdVESL1nfnzLpBCYk6iqOnPHtHhFQWNskGCRZ4apRecS4bMCJCyoWQ-UG_5v-P5SIz5VuiCMJmud5Veb_pwJQYXot0rRdBgMktvCHJeCLD5kCqGAP9BMF1QEoGyDR2h4pJYGyy8Wewd9WvPo9V8pbyT7kDJs2IttjeCP0VhwNZSJ9oILwjdk',
-    'assets/patient-2.jpg': 'https://lh3.googleusercontent.com/aida-public/AB6AXuD_Mr-zTbxzj4E-AOcZZq9iSA8q4n3ZNixQy3Tc8eoYZrnjIkreiFmuzNiUDxHhhIV9pJq70iQTVsUdWDdhI-KOjQgw5mI5xwkWT0s_oClJ22vAauco49F4vStJG7Kv-vZjXkQm1MVnEKU5yKXLxF_0dkYqxGScAwnSTe1b4Bj44EJiuCd9lFmBbwNd-SEppOeSBPY_PqkTRSGo8HPwD6BeNo2znmn-qp0UOr1g6I_mDw9pJYB9PLb5NITdC52J4q8dhDDi8R9WryQ',
-    'assets/patient-3.jpg': 'https://lh3.googleusercontent.com/aida-public/AB6AXuCPKxVfA7GX6JOxYq4l3XdvIY_gOqKaXQGJ5a_w5nqnSnLTuv16-pQMFWbgd73xoqdmlPoR8tQIpj21-dQ0_6unS4Wzl4y3AFEMHJ17wMyczLZ1mP55y_OYJ7jHITSNQB29nU6ArYDbij92HCCRRzkXn-S4U1gTJgmi-TqRlNLbJEnPCJ1CYMcuPCN2gCYbyGZY2KZGW35xUxSIVQQv4QuQX3HbPLxiCzxA5SY-5LpMQhSLD9iCXeGI0n1tPODStwVUlBcis7xNaTI',
-    'assets/map.jpg': 'https://lh3.googleusercontent.com/aida-public/AB6AXuBpfjGS8_nIKjWS4nVQGkRWRht3YVn0662a0QyNnDb4pVclx03FPIM4arzwPGR517hhTQefB37FRMxLAnxHdaAUf5JXhvlFLEp9niRh49i-oQc1oGiKcxS98aeAyjx2OmSFhi1_3rphsNkulphMr9n3DZaY9MP4htF8JoZvu1xcDlSqXv8Xfv8rUr6vUFBT7QyisAqFyEbAs3WmCyvr9TVLAktIy6SM3ZeE2L3b-3DcU6PPqA35_CZpJ006i0gH_bF7ZEMFhZfI5Y4'
-};
-
-/**
- * CORE LOGIC
- */
-function initApp() {
-    renderReviews();
-    handleImageFallbacks();
+// LOGIC FUNCTIONS
+function triggerCall() {
+    window.location.href = `tel:${clinicPhone}`;
 }
 
-/**
- * Generates and injects HTML for each review in the data set.
- */
+function triggerWhatsApp() {
+    window.open(`https://wa.me/${clinicWhatsapp}`, '_blank');
+}
+
+// DYNAMICALLY RENDER REVIEWS
 function renderReviews() {
-    const container = document.getElementById('reviews-grid');
+    const container = document.getElementById('reviews-container');
     if (!container) return;
 
-    container.innerHTML = REVIEWS_DATA.map(review => {
-        // Logic for star rating visualization
-        let starsHtml = '';
-        for (let i = 1; i <= 5; i++) {
-            if (i <= Math.floor(review.rating)) {
-                starsHtml += '<span class="material-symbols-outlined icon-filled text-[20px]">star</span>';
-            } else if (i === Math.ceil(review.rating) && review.rating % 1 !== 0) {
-                starsHtml += '<span class="material-symbols-outlined icon-filled text-[20px]">star_half</span>';
-            } else {
-                starsHtml += '<span class="material-symbols-outlined text-[20px] text-slate-600">star</span>';
-            }
+    container.innerHTML = reviewsData.map(review => {
+        let starsHTML = '';
+        for(let i=0; i<5; i++) {
+            /* Changed to amber-400 for a softer, warmer gold */
+            starsHTML += `<span class="material-symbols-outlined text-[20px] text-amber-400 icon-filled">star</span>`;
         }
 
         return `
-            <div class="review-card bg-slate-800 rounded-2xl p-8 border border-slate-700 flex flex-col justify-between hover:-translate-y-1 transition-all duration-300">
-                <div>
-                    <div class="flex text-yellow-400 mb-4">
-                        ${starsHtml}
-                    </div>
-                    <p class="text-slate-300 leading-relaxed italic mb-6">"${review.text}"</p>
+        <div class="bg-white p-8 rounded-3xl border border-stone-100 shadow-sm hover:shadow-lg transition-all">
+            <div class="flex items-center gap-1 mb-4">
+                ${starsHTML}
+            </div>
+            <p class="text-stone-700 text-lg leading-relaxed italic mb-6">"${review.text}"</p>
+            <div class="flex items-center gap-4">
+                <div class="h-14 w-14 rounded-full overflow-hidden ring-4 ring-primary-light">
+                    <img src="${review.image}" 
+                         onerror="this.onerror=null; this.src='${review.fallback}';" 
+                         alt="${review.name}" 
+                         class="w-full h-full object-cover" />
                 </div>
-                <div class="flex items-center gap-4">
-                    <img src="${review.image}" alt="${review.name}" data-fallback class="w-12 h-12 rounded-full object-cover bg-slate-700">
-                    <div>
-                        <p class="font-bold">${review.name}</p>
-                        <p class="text-xs text-slate-400">${review.category}</p>
-                    </div>
+                <div>
+                    <p class="text-stone-900 font-extrabold">${review.name}</p>
+                    <p class="text-stone-400 text-sm font-semibold uppercase tracking-wider">${review.treatment}</p>
                 </div>
             </div>
+        </div>
         `;
     }).join('');
 }
 
-/**
- * Attaches error listeners to images with the data-fallback attribute.
- */
-function handleImageFallbacks() {
-    document.querySelectorAll('img[data-fallback]').forEach(img => {
-        // Check if current src is broken
-        img.addEventListener('error', function() {
-            const localSrc = this.getAttribute('src');
-            if (IMAGE_PLACEHOLDERS[localSrc]) {
-                this.src = IMAGE_PLACEHOLDERS[localSrc];
-            }
-        });
-        
-        // Trigger fallback if image is already broken (cache scenarios)
-        if (img.complete && img.naturalWidth === 0) {
-            img.dispatchEvent(new Event('error'));
-        }
-    });
-}
-
-// Start the app when DOM is ready
-document.addEventListener("DOMContentLoaded", initApp);
+// INITIALIZE
+document.addEventListener('DOMContentLoaded', renderReviews);
